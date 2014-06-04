@@ -1,6 +1,7 @@
 package com.spingo.handlebars
 
 import com.gilt.handlebars.context.{ BindingFactory, FullBinding, Binding, VoidBinding }
+import com.gilt.handlebars.helper.Helper
 import com.gilt.handlebars.logging.Loggable
 import java.lang.reflect.Method
 import play.api.libs.json._
@@ -80,4 +81,8 @@ object PlayJsonBinding {
   implicit def jsValueToPlayJsonBinding(jsonValue: JsValue) =
     new PlayJsonBinding(jsonValue)
   implicit val bindingFactory = JsonValueBindingFactory
+
+  val jsonHelpers = Map("json" -> Helper[JsValue] { (context, options) =>
+    options.argument(0).toOption.map(_.toString).getOrElse("undefined")
+  })
 }
