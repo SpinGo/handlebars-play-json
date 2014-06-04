@@ -6,7 +6,7 @@ scalaVersion := "2.11.1"
 
 crossScalaVersions := Seq("2.11.1", "2.10.4")
 
-version := "0.1.0"
+version := "0.2.0"
 
 resolvers ++= Seq(
   Classpaths.typesafeReleases,
@@ -17,7 +17,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.3.0",
-  "com.gilt" %% "handlebars" % "1.1.0-spingo",
+  "com.gilt" %% "handlebars" % "1.1.1-spingo",
   "org.scalatest" %% "scalatest" % "2.1.6" % "test"
 )
 

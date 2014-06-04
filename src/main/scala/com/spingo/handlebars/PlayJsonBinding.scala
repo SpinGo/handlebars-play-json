@@ -39,11 +39,11 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
     case _ => false
   }
 
-  def traverse(key: String, args: List[Any] = List.empty): Binding[JsValue] =
+  def traverse(key: String, args: List[Binding[JsValue]] = List.empty): Binding[JsValue] =
     data match {
       case m: JsObject => (m \ key) match {
         case u: JsUndefined =>
-          info("Could not traverse key ${key} in ${m}")
+          info(s"Could not traverse key ${key} in ${m}")
           VoidBinding[JsValue]
         case value =>
           new PlayJsonBinding(value)
@@ -72,6 +72,7 @@ object JsonValueBindingFactory extends BindingFactory[JsValue] {
     new PlayJsonBinding(_model)
 
   def bindPrimitive(v: String) = apply(JsString(v))
+  def bindPrimitive(b: Boolean) = apply(JsBoolean(b))
   def bindPrimitive(model: Int) = apply(JsNumber(model))
 }
 
