@@ -52,4 +52,10 @@ class PlayJsonBindingSpec extends FunSpec with Matchers {
       b("""{"a": 1, "b": 2}""").asDictionaryCollection.toSeq.map { case (k,v) => (k, v.get) } should be(Seq("a" -> JsNumber(1), "b" -> JsNumber(2)))
     }
   }
+  describe("getOrElse") {
+    it("returns the contents") {
+      val test = ((b(JsUndefined("boogie")).getOrElse { JsUndefined("dance") }))
+      test.toString should equal (JsUndefined("boogie").toString)
+    }
+  }
 }
