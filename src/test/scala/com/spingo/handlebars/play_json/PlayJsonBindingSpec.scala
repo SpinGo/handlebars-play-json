@@ -1,4 +1,4 @@
-package com.spingo.handlebars
+package com.spingo.handlebars.play_json
 
 import org.scalatest.{FunSpec,Matchers}
 import play.api.libs.json._
@@ -26,15 +26,15 @@ class PlayJsonBindingSpec extends FunSpec with Matchers {
   describe("#traverse") {
     val objBinding = b("""{"name": "Mike"}""")
     it("traverses an object") {
-      objBinding.traverse("name").renderString should be("Mike")
+      objBinding.traverse("name").render should be("Mike")
     }
 
     it("goes into the void for undefined keys") {
-      objBinding.traverse("boogie").isUndefined should be(true)
+      objBinding.traverse("boogie").isDefined should be(false)
     }
 
     it("goes into the void when trying to traverse a non-object") {
-      b(JsNumber(0)).traverse("boogie").isUndefined should be(true)
+      b(JsNumber(0)).traverse("boogie").isDefined should be(false)
     }
   }
 
@@ -44,7 +44,7 @@ class PlayJsonBindingSpec extends FunSpec with Matchers {
       arrayBinding.isCollection should be(true)
     }
     it("#asCollection turns a collection into a Seq of bindings") {
-      arrayBinding.asCollection.map(_.renderString) should be(Seq("1", "2", "3"))
+      arrayBinding.asCollection.map(_.render) should be(Seq("1", "2", "3"))
     }
   }
   describe("asDictionaryCollection") {

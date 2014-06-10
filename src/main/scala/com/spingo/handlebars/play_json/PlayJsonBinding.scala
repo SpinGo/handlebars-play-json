@@ -1,16 +1,16 @@
-package com.spingo.handlebars
+package com.spingo.handlebars.play_json
 
-import com.gilt.handlebars.context.{ BindingFactory, FullBinding, Binding, VoidBinding }
+import com.gilt.handlebars.binding.{ BindingFactory, FullBinding, Binding, VoidBinding }
 import com.gilt.handlebars.helper.Helper
 import com.gilt.handlebars.logging.Loggable
 import java.lang.reflect.Method
 import play.api.libs.json._
 
 class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Loggable {
-  override def toOption = if (isValueless) None else Some(data)
   override def toString = s"PlayJsonBinding(${data})"
+  lazy val factory = PlayJsonBindingFactory
 
-  lazy val renderString =
+  lazy val render =
     if (isTruthy)
       data match {
         case JsString(s)  => s
@@ -33,11 +33,10 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
   lazy val isDictionary = data.isInstanceOf[JsObject]
   lazy val isCollection = data.isInstanceOf[JsArray] && ! isDictionary
 
-  val isUndefined = false
-  protected lazy val isValueless = data match {
-    case JsNull => true
-    case t: JsUndefined => true
-    case _ => false
+  lazy val isDefined = data match {
+    case JsNull => false
+    case t: JsUndefined => false
+    case _ => true
   }
 
   def traverse(key: String, args: List[Binding[JsValue]] = List.empty): Binding[JsValue] =
@@ -52,37 +51,24 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
       case _ => VoidBinding[JsValue]
     }
 
-  lazy val asCollection =
-    data match {
-      case JsArray(m) =>
-        m map (new PlayJsonBinding(_))
-      case _ =>
-        Seq(this)
-    }
+  protected def collectionToIterable = data match {
+    case JsArray(m) =>
+      m.toIterable
+    case _ =>
+      throw new Exception("I shouldn't be here")
+  }
 
-  lazy val asDictionaryCollection = {
-    data match {
-      case JsObject(m) => m map { case (k,v) => (k, new PlayJsonBinding(v)) }
-      case _ => Seq()
-    }
+  protected def dictionaryToIterable = data match {
+    case JsObject(m) => m.toIterable
+    case _ => throw new Exception("I shouldn't be here")
   }
 }
 
-object JsonValueBindingFactory extends BindingFactory[JsValue] {
+object PlayJsonBindingFactory extends BindingFactory[JsValue] {
   def apply(_model: JsValue): PlayJsonBinding =
     new PlayJsonBinding(_model)
 
   def bindPrimitive(v: String) = apply(JsString(v))
   def bindPrimitive(b: Boolean) = apply(JsBoolean(b))
   def bindPrimitive(model: Int) = apply(JsNumber(model))
-}
-
-object PlayJsonBinding {
-  implicit def jsValueToPlayJsonBinding(jsonValue: JsValue) =
-    new PlayJsonBinding(jsonValue)
-  implicit val bindingFactory = JsonValueBindingFactory
-
-  val jsonHelpers = Map("json" -> Helper[JsValue] { (context, options) =>
-    options.argument(0).toOption.map(_.toString).getOrElse("undefined")
-  })
 }
