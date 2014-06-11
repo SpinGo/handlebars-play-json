@@ -6,7 +6,7 @@ scalaVersion := "2.11.1"
 
 crossScalaVersions := Seq("2.11.1", "2.10.4")
 
-version := "0.3.1"
+version := "0.3.2"
 
 resolvers ++= Seq(
   Classpaths.typesafeReleases,
