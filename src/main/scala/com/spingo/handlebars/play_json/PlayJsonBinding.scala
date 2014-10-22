@@ -1,8 +1,8 @@
 package com.spingo.handlebars.play_json
 
-import com.gilt.handlebars.binding.{ BindingFactory, FullBinding, Binding, VoidBinding }
-import com.gilt.handlebars.helper.Helper
-import com.gilt.handlebars.logging.Loggable
+import com.gilt.handlebars.scala.binding.{ BindingFactory, FullBinding, Binding, VoidBinding }
+import com.gilt.handlebars.scala.helper.Helper
+import com.gilt.handlebars.scala.logging.Loggable
 import java.lang.reflect.Method
 import play.api.libs.json._
 
@@ -39,7 +39,7 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
     case _ => true
   }
 
-  def traverse(key: String, args: List[Binding[JsValue]] = List.empty): Binding[JsValue] =
+  def traverse(key: String, args: Seq[Binding[JsValue]] = Seq()): Binding[JsValue] =
     data match {
       case m: JsObject => (m \ key) match {
         case u: JsUndefined =>

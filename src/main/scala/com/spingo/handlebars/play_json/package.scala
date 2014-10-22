@@ -1,15 +1,15 @@
 package com.spingo.handlebars
 
 import play.api.libs.json._
-import com.gilt.handlebars.helper.Helper
+import com.gilt.handlebars.scala.helper.Helper
 
 package object play_json {
 
-  import com.gilt.handlebars.binding.Binding
-  import com.gilt.handlebars.binding.BindingFactory
-  import com.gilt.handlebars.binding.FullBinding
-  import com.gilt.handlebars.helper.HelperOptions
-  import com.gilt.handlebars.logging.Loggable
+  import com.gilt.handlebars.scala.binding.Binding
+  import com.gilt.handlebars.scala.binding.BindingFactory
+  import com.gilt.handlebars.scala.binding.FullBinding
+  import com.gilt.handlebars.scala.helper.HelperOptions
+  import com.gilt.handlebars.scala.logging.Loggable
   implicit def jsValueToPlayJsonBinding(jsonValue: JsValue) =
     new PlayJsonBinding(jsonValue)
   implicit val bindingFactory = PlayJsonBindingFactory
