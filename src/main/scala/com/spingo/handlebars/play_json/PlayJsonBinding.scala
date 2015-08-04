@@ -26,7 +26,6 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
     case JsString(s)    => s != ""
     case JsNumber(n)    => n != 0
     case JsNull         => false
-    case t: JsUndefined => false
     case _ => true
   }
 
@@ -35,7 +34,6 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
 
   lazy val isDefined = data match {
     case JsNull => false
-    case t: JsUndefined => false
     case _ => true
   }
 
@@ -45,8 +43,8 @@ class PlayJsonBinding(val data: JsValue) extends FullBinding[JsValue] with Logga
         case u: JsUndefined =>
           info(s"Could not traverse key ${key} in ${m}")
           VoidBinding[JsValue]
-        case value =>
-          new PlayJsonBinding(value)
+        case v: JsDefined =>
+          new PlayJsonBinding(v.value)
       }
       case _ => VoidBinding[JsValue]
     }

@@ -2,11 +2,11 @@ name := "handlebars-play-json"
 
 organization := "com.spingo"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.7"
 
-crossScalaVersions := Seq("2.11.1", "2.10.4")
+crossScalaVersions := Seq("2.11.7", "2.10.4")
 
-version := "1.0.0-spingo"
+version := "1.1.0-spingo"
 
 resolvers ++= Seq(
   Classpaths.typesafeReleases,
@@ -16,15 +16,16 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json" % "2.3.0",
+  "com.typesafe.play" %% "play-json" % "2.4.2",
   "com.gilt" %% "handlebars-scala" % "2.0.2-spingo",
-  "org.scalatest" %% "scalatest" % "2.1.6" % "test"
+  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
 
 publishMavenStyle := true
-
-// For publishing / testing locally
-//publishTo := Some(Resolver.file("m2",  new File(Path.userHome.absolutePath+"/.m2/repository")))
+publishTo := {
+  val repo = if (version.value.trim.endsWith("SNAPSHOT")) "snapshots" else "releases"
+  Some(repo at s"s3://spingo-oss/repositories/$repo")
+}
 
 publishArtifact in Test := false
 

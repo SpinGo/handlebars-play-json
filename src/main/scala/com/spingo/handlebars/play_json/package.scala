@@ -80,7 +80,7 @@ package object play_json {
       options.argument(0).asOption.map(_.get.toString).getOrElse("undefined")
     },
     "prettyJson" -> Helper[JsValue] { (self, options) =>
-      val arg = options.argument(0).getOrElse { JsUndefined("undefined") }
+      val arg = options.argument(0).getOrElse { JsNull }
       Json.prettyPrint(arg)
     },
     "eachOrdered" -> new EachOrderedHelper[JsValue],

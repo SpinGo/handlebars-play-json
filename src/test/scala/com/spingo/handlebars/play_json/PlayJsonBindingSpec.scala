@@ -54,8 +54,8 @@ class PlayJsonBindingSpec extends FunSpec with Matchers {
   }
   describe("getOrElse") {
     it("returns the contents") {
-      val test = ((b(JsUndefined("boogie")).getOrElse { JsUndefined("dance") }))
-      test.toString should equal (JsUndefined("boogie").toString)
+      val test = ((b(JsNull).getOrElse { JsString("dance") }))
+      test.toString should equal ("null")
     }
   }
 }
